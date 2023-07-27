@@ -24,7 +24,17 @@ public class UserController {
                 return user;
             }
         }
-
         throw new RuntimeException("User not found");
+    }
+    public List<User> readAllUsers() {
+        return repository.findAll();
+    }
+
+    public void updateUser(Long uid, User userToUpdate) {
+        userToUpdate.setId(uid);
+        System.out.printf("Changed ID of new user to %d\n", uid);
+        repository.update(uid, userToUpdate);
+        System.out.println("Updated repository with method repository.update");
+
     }
 }
