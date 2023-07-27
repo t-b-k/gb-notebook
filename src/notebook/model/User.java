@@ -1,5 +1,7 @@
 package notebook.model;
 
+import java.util.Objects;
+
 public class User {
     private Long id;
     private String firstName;
@@ -51,6 +53,24 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("Идентафикатор: %s\nИмя: %s,\nФамилия: %s,\nТелефон: %s", id, firstName, lastName, phone);
+        return String.format("Идентификатор: %s\nИмя: %s,\nФамилия: %s,\nТелефон: %s", id, firstName, lastName, phone);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        User other = (User) o;
+        return id == other.getId() && firstName.equals(other.getFirstName()) && lastName.equals(other.getLastName()) &&
+                phone.equals(other.getPhone());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 19;
+        int factor = 31;
+        result = result*factor + this.getId().hashCode();
+        result = result*factor + this.getFirstName().hashCode();
+        result = result*factor + this.getLastName().hashCode();
+        result = result*factor + this.getPhone().hashCode();
+        return result>>>1;
     }
 }

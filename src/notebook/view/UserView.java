@@ -4,6 +4,7 @@ import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class UserView {
@@ -13,11 +14,11 @@ public class UserView {
         this.userController = userController;
     }
 
-    public void run(){
+    public void run() {
         Commands com;
 
         while (true) {
-            String command = prompt("Введите команду: ");
+            String command = prompt("Input command: ");
             com = Commands.valueOf(command);
             if (com == Commands.EXIT) return;
             switch (com) {
@@ -37,11 +38,40 @@ public class UserView {
                         throw new RuntimeException(e);
                     }
                     break;
-
+                case LIST: // Чтение списка пользователей
+                    try {
+                        List<User> users = userController.readAllUsers();
+                        System.out.println(users);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case UPDATE: // обновление данных пользователя
+                    try {
+                        Long userId = Long.parseLong(prompt("Введите идентификатор пользователя: "));
+                        String Name = prompt("Новое имя: ");
+                        String lName = prompt("Новая фамилия: ");
+                        String phoneNumber = prompt("Новый номер телефона: ");
+                        User updatedUser = new User(Name, lName, phoneNumber);
+                        System.out.println(updatedUser);
+                        userController.updateUser(userId, updatedUser);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case DELETE: // удаление пользователя
+                    try {
+                        Long userId = Long.parseLong(prompt("Введите идентификатор пользователя: "));
+                        userController.deleteUser(userId);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case NONE: // ничего не делаем
+                    break;
             }
         }
     }
-
     private String prompt(String message) {
         Scanner in = new Scanner(System.in);
         System.out.print(message);

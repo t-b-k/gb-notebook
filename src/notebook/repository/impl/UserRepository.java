@@ -1,11 +1,11 @@
 package notebook.repository.impl;
 
-import notebook.dao.impl.FileOperation;
 import notebook.mapper.impl.UserMapper;
 import notebook.model.User;
 import notebook.repository.GBRepository;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,6 @@ import java.util.Optional;
 public class UserRepository implements GBRepository<User, Long> {
     private final UserMapper mapper;
     private final String fileName;
-//    private final FileOperation operation;
 
     public UserRepository(String fileName) {
         this.mapper = new UserMapper();
@@ -93,9 +92,13 @@ public class UserRepository implements GBRepository<User, Long> {
         }
     }
     @Override
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         List<User> users = findAll();
-        return Optional.empty();
+        User foundUser = null;
+        for (User u: users) {
+            if (u.getId() == id) foundUser = u;
+        }
+        return foundUser;
     }
 
     @Override
@@ -124,10 +127,11 @@ public class UserRepository implements GBRepository<User, Long> {
     public boolean delete(Long id) {
         boolean result = false;
         List<User> users = findAll();
-        User userToDelete = findById(Long id);
+        User userToDelete = (User)findById(id);
         if (userToDelete != null) {
             result = true;
             users.remove(userToDelete);
+            write(users);
         }
         return result;
     }

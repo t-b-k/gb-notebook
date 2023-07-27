@@ -37,4 +37,8 @@ public class UserController {
         System.out.println("Updated repository with method repository.update");
 
     }
+    public void deleteUser(Long uid) {
+        repository.delete(uid);
+        System.out.printf("\nDeleted user with id = %d\n", uid);
+    }
 }
