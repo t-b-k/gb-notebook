@@ -100,11 +100,35 @@ public class UserRepository implements GBRepository<User, Long> {
 
     @Override
     public Optional<User> update(Long id, User user) {
+        List<User> users = findAll();
+        User editUser = users.stream()
+                .filter(u -> u.getId()
+                        .equals(id))
+                .findFirst().orElseThrow(() -> new RuntimeException("USER NOT FOUND"));
+        editUser.setId(id);
+        editUser.setFirstName(user.getFirstName());
+        editUser.setLastName(user.getLastName());
+        editUser.setPhone(user.getPhone());
+        write(users);
         return Optional.empty();
+    }
+    private void write(List<User> users) {
+        List<String> lines = new ArrayList<>();
+        for (User u: users) {
+            lines.add(mapper.toInput(u));
+        }
+        saveAll(lines);
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        boolean result = false;
+        List<User> users = findAll();
+        User userToDelete = findById(Long id);
+        if (userToDelete != null) {
+            result = true;
+            users.remove(userToDelete);
+        }
+        return result;
     }
 }

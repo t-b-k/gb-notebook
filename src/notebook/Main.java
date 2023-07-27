@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         createDB();
         FileOperation fileOperation = new FileOperation(DB_PATH);
-        GBRepository<User, Long> repository = new UserRepository(fileOperation);
+        GBRepository<User, Long> repository = new UserRepository(DB_PATH);
         UserController controller = new UserController(repository);
         UserView view = new UserView(controller);
         view.run();
